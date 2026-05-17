@@ -1,127 +1,527 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Project 30%</title>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mobile App Development — Group Project</title>
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    :root {
+      --black   : #08070F;
+      --dark    : #0F0D1A;
+      --card    : #15131F;
+      --card2   : #1C192C;
+      --purple  : #7B2FFF;
+      --purple2 : #5B17D4;
+      --accent  : #FF3CAC;
+      --gold    : #FFD700;
+      --cyan    : #00D4FF;
+      --green   : #00FF94;
+      --text    : #F2EFFF;
+      --sub     : #8B84A8;
+      --border  : #2A2540;
+    }
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--black);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Animated background grid */
+    .bg-grid {
+      position: fixed; inset: 0; z-index: 0;
+      background-image:
+        linear-gradient(rgba(123,47,255,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(123,47,255,0.06) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridShift 20s linear infinite;
+    }
+    @keyframes gridShift { from{background-position:0 0} to{background-position:60px 60px} }
+
+    .orb { position:fixed; border-radius:50%; filter:blur(100px); opacity:0.12; animation:float 8s ease-in-out infinite; z-index:0; pointer-events:none; }
+    .orb-1 { width:500px; height:500px; background:var(--purple); top:-100px; left:-100px; }
+    .orb-2 { width:400px; height:400px; background:var(--accent);  bottom:-100px; right:-100px; animation-delay:4s; }
+    .orb-3 { width:300px; height:300px; background:var(--cyan);    top:40%; left:50%; animation-delay:2s; opacity:0.07; }
+    @keyframes float { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-30px) scale(1.05)} }
+
+    .wrapper { position:relative; z-index:1; max-width:1100px; margin:0 auto; padding:0 24px; }
+
+    /* Header */
+    header { position:relative; z-index:1; text-align:center; padding:80px 24px 60px; }
+    .header-tag {
+      display:inline-block; font-family:'Space Mono',monospace;
+      font-size:11px; letter-spacing:3px; text-transform:uppercase;
+      color:var(--purple); background:rgba(123,47,255,0.12);
+      border:1px solid rgba(123,47,255,0.3); border-radius:99px;
+      padding:6px 16px; margin-bottom:28px;
+      animation:tagIn 0.6s ease both;
+    }
+    @keyframes tagIn { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:translateY(0)} }
+
+    .hero-title {
+      font-family:'Bebas Neue',sans-serif;
+      font-size:clamp(48px,9vw,96px); line-height:0.95;
+      letter-spacing:2px; margin-bottom:20px;
+      animation:titleIn 0.8s cubic-bezier(0.16,1,0.3,1) 0.1s both;
+    }
+    @keyframes titleIn { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+    .hero-title .line-1 { display:block; color:var(--text); }
+    .hero-title .line-2 {
+      display:block;
+      background:linear-gradient(135deg,var(--purple),var(--accent),var(--cyan));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+      animation:gradientShift 4s ease-in-out infinite alternate;
+    }
+    @keyframes gradientShift { from{filter:hue-rotate(0deg)} to{filter:hue-rotate(30deg)} }
+
+    .hero-sub {
+      font-size:clamp(15px,2vw,18px); color:var(--sub);
+      max-width:560px; margin:0 auto 16px; line-height:1.7;
+      animation:subIn 0.8s ease 0.3s both;
+    }
+    @keyframes subIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+
+    .hero-meta { display:flex; justify-content:center; gap:20px; flex-wrap:wrap; margin-top:28px; animation:subIn 0.8s ease 0.5s both; }
+    .meta-chip { display:flex; align-items:center; gap:8px; background:var(--card); border:1px solid var(--border); border-radius:99px; padding:8px 16px; font-size:13px; color:var(--sub); }
+    .meta-chip span { font-size:16px; }
+
+    .divider { width:100%; height:1px; background:linear-gradient(90deg,transparent,var(--purple),var(--accent),transparent); margin:0 auto 60px; animation:subIn 0.8s ease 0.6s both; }
+
+    .section-label { text-align:center; margin-bottom:48px; animation:subIn 0.8s ease 0.7s both; }
+    .section-label h2 { font-family:'Bebas Neue',sans-serif; font-size:clamp(28px,5vw,42px); letter-spacing:2px; color:var(--text); margin-bottom:8px; }
+    .section-label p  { font-size:15px; color:var(--sub); }
+
+    /* Cards grid */
+    .members-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:28px; margin-bottom:80px; }
+
+    /* Member card */
+    .member-card {
+      position:relative; background:var(--card); border:1px solid var(--border);
+      border-radius:24px; overflow:hidden; cursor:pointer; text-decoration:none;
+      display:block;
+      transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1), border-color 0.3s, box-shadow 0.3s;
+      animation:cardIn 0.8s cubic-bezier(0.16,1,0.3,1) both;
+    }
+    .member-card:nth-child(1) { animation-delay:0.8s; }
+    .member-card:nth-child(2) { animation-delay:1.0s; }
+    @keyframes cardIn { from{opacity:0;transform:translateY(40px) scale(0.95)} to{opacity:1;transform:translateY(0) scale(1)} }
+
+    .member-card:hover { transform:translateY(-8px) scale(1.01); border-color:var(--purple); box-shadow:0 20px 60px rgba(123,47,255,0.25); }
+    .member-card:nth-child(2):hover { border-color:var(--accent); box-shadow:0 20px 60px rgba(255,60,172,0.25); }
+
+    .card-glow { position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--purple),var(--cyan)); opacity:0; transition:opacity 0.3s; }
+    .member-card:nth-child(2) .card-glow { background:linear-gradient(90deg,var(--accent),var(--gold)); }
+    .member-card:hover .card-glow { opacity:1; }
+
+    /* ============================================
+       PHOTO SECTION — STATIC IMAGE
+       Letak gambar dalam folder images/
+       Nama fail: images/ammar.jpg dan images/fatin.jpg
+    ============================================ */
+    .card-photo-wrap {
+      position:relative; width:100%; height:420px;
+      overflow:hidden; background:var(--card2);
+    }
+
+    /* Gambar sebenar — tunjuk badan penuh */
+    .card-photo {
+      width:100%; height:100%;
+      object-fit:cover;
+      object-position:center 15%;  /* fokus badan — bukan muka je */
+      display:block;
+      transition:transform 0.5s ease;
+    }
+    .member-card:hover .card-photo { transform:scale(1.04); }
+
+    /* Placeholder — muncul bila gambar tak jumpa */
+    .card-photo-placeholder {
+      width:100%; height:100%;
+      display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px;
+      background: linear-gradient(160deg, #1C192C 0%, #0F0D1A 50%, #1a0a2e 100%);
+      border: 2px dashed rgba(255,60,172,0.25);
+      position: relative;
+      overflow: hidden;
+    }
+    /* Decorative rings behind placeholder */
+    .card-photo-placeholder::before {
+      content: '';
+      position: absolute;
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,60,172,0.1);
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+    }
+    .card-photo-placeholder::after {
+      content: '';
+      position: absolute;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,60,172,0.06);
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+    }
+    .placeholder-icon { font-size: 52px; position: relative; z-index: 1; opacity: 0.6; }
+    .placeholder-text { font-size:14px; color:var(--sub); font-weight:600; position:relative; z-index:1; }
+    .placeholder-hint { font-size:11px; color:rgba(255,60,172,0.5); font-family:'Space Mono',monospace; position:relative; z-index:1; }
+
+    .card-photo-overlay { position:absolute; bottom:0; left:0; right:0; height:100px; background:linear-gradient(transparent,var(--card)); }
+
+    .card-role-badge {
+      position:absolute; top:14px; right:14px;
+      font-family:'Space Mono',monospace; font-size:10px; letter-spacing:1px;
+      padding:5px 12px; border-radius:99px; font-weight:700; text-transform:uppercase;
+    }
+    .badge-primary   { background:rgba(123,47,255,0.25); border:1px solid rgba(123,47,255,0.6); color:#C79EFF; }
+    .badge-secondary { background:rgba(255,60,172,0.2);  border:1px solid rgba(255,60,172,0.5); color:#FF8AD4; }
+
+    /* Card body */
+    .card-body { padding:24px; }
+    .card-number { font-family:'Space Mono',monospace; font-size:11px; color:var(--purple); letter-spacing:2px; margin-bottom:8px; }
+    .member-card:nth-child(2) .card-number { color:var(--accent); }
+    .card-name { font-family:'Bebas Neue',sans-serif; font-size:32px; letter-spacing:1px; line-height:1; margin-bottom:6px; color:var(--text); }
+    .card-id   { font-size:13px; color:var(--sub); margin-bottom:16px; font-family:'Space Mono',monospace; }
+
+    .card-project { background:var(--card2); border-radius:12px; padding:14px; margin-bottom:20px; border:1px solid var(--border); }
+    .cp-label { font-size:10px; color:var(--sub); text-transform:uppercase; letter-spacing:1px; margin-bottom:4px; }
+    .cp-title { font-size:15px; font-weight:600; color:var(--text); }
+    .cp-tech  { font-size:11px; color:var(--sub); margin-top:4px; }
+
+    .card-tags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:20px; }
+    .tag { font-size:11px; font-weight:600; padding:4px 10px; border-radius:6px; font-family:'Space Mono',monospace; }
+    .tag-html { background:rgba(255,100,0,0.15); color:#FF8C42; border:1px solid rgba(255,100,0,0.25); }
+    .tag-css  { background:rgba(0,120,255,0.15); color:#5AADFF; border:1px solid rgba(0,120,255,0.25); }
+    .tag-js   { background:rgba(255,210,0,0.12); color:#FFD700; border:1px solid rgba(255,210,0,0.25); }
+    .tag-jq   { background:rgba(0,200,150,0.12); color:#00E0AA; border:1px solid rgba(0,200,150,0.25); }
+
+    .card-cta {
+      display:flex; align-items:center; justify-content:space-between;
+      width:100%; padding:12px 16px; border-radius:12px;
+      font-size:14px; font-weight:700; font-family:'DM Sans',sans-serif;
+      cursor:pointer; border:none; text-decoration:none; color:#fff;
+      transition:transform 0.2s, box-shadow 0.2s;
+    }
+    .member-card:nth-child(1) .card-cta { background:linear-gradient(135deg,var(--purple),var(--purple2)); box-shadow:0 4px 20px rgba(123,47,255,0.35); }
+    .member-card:nth-child(2) .card-cta { background:linear-gradient(135deg,var(--accent),#C0006B); box-shadow:0 4px 20px rgba(255,60,172,0.35); }
+    .card-cta:hover { transform:translateY(-2px); }
+    .cta-arrow { font-size:18px; transition:transform 0.2s; }
+    .member-card:hover .cta-arrow { transform:translateX(4px); }
+
+    /* Footer */
+    .footer-info { text-align:center; padding:40px 24px 60px; border-top:1px solid var(--border); animation:subIn 0.8s ease 1.2s both; }
+    .footer-logo { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:3px; background:linear-gradient(135deg,var(--purple),var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:8px; }
+    .footer-sub  { font-size:13px; color:var(--sub); line-height:1.8; }
+    .footer-sub strong { color:var(--text); }
+
+    /* Toast */
+    #toast {
+      position:fixed; bottom:30px; left:50%; transform:translateX(-50%);
+      background:var(--card); border:1px solid var(--border); border-radius:12px;
+      padding:12px 24px; font-size:14px; font-weight:500;
+      box-shadow:0 8px 32px rgba(0,0,0,0.5); z-index:999;
+      white-space:nowrap; display:none; max-width:90vw; text-align:center;
+      animation:toastIn 0.3s ease;
+    }
+    @keyframes toastIn { from{opacity:0;transform:translateX(-50%) translateY(10px)} to{opacity:1;transform:translateX(-50%) translateY(0)} }
+
+    /* ============================================
+       NAVBAR
+    ============================================ */
+    .navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      height: 64px;
+      background: rgba(8,7,15,0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(42,37,64,0.6);
+    }
+
+    /* Logo kiri */
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px;
+      letter-spacing: 3px;
+      background: linear-gradient(135deg, var(--purple), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-decoration: none;
+    }
+
+    /* Tab links */
+    .nav-tabs {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .nav-tab {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 18px;
+      border-radius: 99px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      text-decoration: none;
+      color: var(--sub);
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .nav-tab:hover {
+      color: var(--text);
+      background: rgba(255,255,255,0.05);
+    }
+    .nav-tab.active {
+      color: var(--text);
+      background: rgba(123,47,255,0.12);
+      border-color: rgba(123,47,255,0.3);
+    }
+    .nav-tab .tab-icon { font-size: 15px; }
+
+    /* Active dot indicator */
+    .nav-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; left: 50%;
+      transform: translateX(-50%);
+      width: 16px; height: 2px;
+      background: linear-gradient(90deg, var(--purple), var(--accent));
+      border-radius: 99px;
+    }
+
+    /* Push content below navbar */
+    body { padding-top: 64px; }
+    header { padding-top: 60px; }
+
+    /* Mobile navbar */
+    @media (max-width: 480px) {
+      .navbar { padding: 0 16px; }
+      .nav-logo { font-size: 16px; }
+      .nav-tab  { padding: 7px 12px; font-size: 13px; }
+      .nav-tab .tab-icon { display: none; }
+    }
+
+    /* Responsive */
+    @media (max-width:640px) {
+      header { padding:50px 16px 40px; }
+      .hero-meta { gap:10px; }
+      .members-grid { grid-template-columns:1fr; gap:20px; }
+      .card-photo-wrap { height:340px; }
+    }
+    @media (min-width:900px) {
+      .members-grid { grid-template-columns:1fr 1fr; }
+    }
+  </style>
 </head>
-
 <body>
 
-    <!-- NAVBAR -->
+  <div class="bg-grid"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
 
-    <nav>
-        <div class="nav-container">
+  <!-- ============================================
+       NAVBAR
+  ============================================ -->
+  <nav class="navbar">
+    <!-- Logo / Brand -->
+    <a href="index.html" class="nav-logo">DFD 40143</a>
 
-            <div class="logo">
-                <i class="fas fa-brain"></i>
-                <span>Project 30%</span>
-            </div>
+    <!-- Tab links -->
+    <div class="nav-tabs">
+      <!-- Tab 1: Home — pergi ke main page (active sekarang) -->
+      <a href="index.html" class="nav-tab active">
+        <span class="tab-icon">🏠</span>
+        <span>Home</span>
+      </a>
 
-            <div class="nav-links">
-                <a href="#">Home</a>
-                <!-- <a href="#">About</a>
-                <a href="#">Team</a>
-                <a href="#">Contact</a> -->
-            </div>
+      <!-- Tab 2: About Us — pergi ke project Fatin -->
+      <!-- ⚠️ Tukar "about.html" ikut nama fail rakan awak -->
+      <a href="about.html" class="nav-tab">
+        <span class="tab-icon">👥</span>
+        <span>About Us</span>
+      </a>
+    </div>
+  </nav>
 
-        </div>
-    </nav>
+  <header>
+    <div class="header-tag">DFD 40143 · Mobile Application Development</div>
+    <h1 class="hero-title">
+      <span class="line-1">GROUP</span>
+      <span class="line-2">PROJECT</span>
+    </h1>
+    <p class="hero-sub">
+      LO4 S1 — Field Study Assignment · January–July 2026 Session<br/>
+      Institut Kemahiran MARA Lumut
+    </p>
+    <div class="hero-meta">
+      <div class="meta-chip"><span>📚</span> Diploma in Computer Technology</div>
+      <div class="meta-chip"><span>🏛️</span> IKM Lumut</div>
+      <div class="meta-chip"><span>👥</span> 2 Members</div>
+    </div>
+  </header>
 
-    HERO
+  <div class="wrapper">
+    <div class="divider"></div>
 
-    <section class="hero">
+    <div class="section-label">
+      <h2>MEET THE TEAM</h2>
+      <p>Click on a member card to view their individual project</p>
+    </div>
 
-        <!-- <div class="badge">
-            <i class="fas fa-robot"></i>
-            AI Powered Assignment System
-        </div>  -->
+    <div class="members-grid">
 
-        <h1>Project 30%</h1>
+      <!-- ===== CARD 1 — MUHAMMAD AMMAR ===== -->
+      <a class="member-card" href="https://amru0920.github.io/FitTrack/">
+        <div class="card-glow"></div>
 
-        <p>
-            Revolutionizing how students submit <br>
-            and manage assignments online.
-        </p>
+        <div class="card-photo-wrap">
+          <!--
+            =====================================================
+            TUKAR NAMA FAIL GAMBAR AWAK DI SINI
+            Letak gambar dalam folder: images/
+            Contoh: images/ammar.jpg  atau  images/ammar.png
+            =====================================================
+          -->
+          <img class="card-photo" 
+     src="https://github.com/amru0920/FitTrack/blob/main/images/ammar.jpeg?raw=true" 
+     alt="Ammar's Profile Picture">
+               alt="Muhammad Ammar"
+               onerror="this.style.display='none'; document.getElementById('ph1').style.display='flex'"/>
 
-        <!-- <div class="btn-group">
-            <button class="btn btn-primary">
-                <i class="fas fa-upload"></i>
-                Submit Now
-            </button>
+          <!-- Placeholder — muncul kalau gambar tak jumpa -->
+          <div id="ph1" class="card-photo-placeholder" style="display:none">
+            <span class="placeholder-icon">👤</span>
+            <span class="placeholder-text">Muhammad Ammar</span>
+            <span class="placeholder-hint">images/ammar.jpeg</span>
+          </div>
 
-            <button class="btn btn-secondary">
-                <i class="fas fa-play"></i>
-                Watch Demo
-            </button>
-        </div> -->
-
-    </section>
-
-    <!-- TEAM -->
-
-    <section class="team-section">
-
-        <h2 class="section-title">
-            Meet Our <span class="gradient-text">Team</span>
-        </h2>
-
-        <div class="team-grid">
-
-            <!-- CARD 1 -->
-
-            <div class="team-card">
-
-                <img src="photo_2026-05-17_21-55-35.jpg" class="profile-img">
-
-                <h3>Muhd Ammar</h3>
-
-                <!-- <p>AI Developer & Backend Engineer</p> -->
-
-                <!-- <div class="social-icons">
-                    <a href="#"><i class="fab fa-github"></i></a>
-                    <a href="#"><i class="fab fa-linkedin"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                </div> -->
-
-            </div>
-
-            <!-- CARD 2 -->
-
-            <div class="team-card">
-
-                <img src="fatin.jpeg" class="profile-img">
-
-                <h3>Fatin Nadiah</h3>
-
-                <!-- <p>Frontend Developer & UI Designer</p> -->
-
-                 <!-- <div class="social-icons">
-                     <a href="#"><i class="fab fa-github"></i></a>
-                    <a href="#"><i class="fab fa-linkedin"></i></a> 
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                </div>  -->
-
-            </div>
-
+          <div class="card-photo-overlay"></div>
+          <span class="card-role-badge badge-primary">Main Page</span>
         </div>
 
-    </section>
+        <div class="card-body">
+          <p class="card-number">// MEMBER 01</p>
+          <h2 class="card-name">MUHAMMAD AMMAR</h2>
+          <p class="card-id">Student ID: 2402080</p>
 
-    <!-- FOOTER -->
+          <div class="card-project">
+            <p class="cp-label">Project</p>
+            <p class="cp-title">FitTrack Lite — Fitness Tracking App</p>
+            <p class="cp-tech">BMI Calculator · Workout Tracker · Nutrition Guide</p>
+          </div>
 
-    <footer>
-        © 2026 Project 30% • Built with ❤️ for Students
+          <div class="card-tags">
+            <span class="tag tag-html">HTML5</span>
+            <span class="tag tag-css">CSS3</span>
+            <span class="tag tag-js">JavaScript</span>
+            <span class="tag tag-jq">jQuery</span>
+          </div>
+
+          <div class="card-cta">
+            <span>View My Project</span>
+            <span class="cta-arrow">→</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- ===== CARD 2 — FATIN ===== -->
+      <a class="member-card" href="about.html">
+        <div class="card-glow"></div>
+
+        <div class="card-photo-wrap">
+          <!--
+            =====================================================
+            TUKAR NAMA FAIL GAMBAR FATIN DI SINI
+            Letak gambar dalam folder: images/
+            Contoh: images/fatin.jpg  atau  images/fatin.png
+            =====================================================
+          -->
+          <img class="card-photo"
+               src="images/fatin.jpg"
+               alt="Fatin"
+               onerror="this.style.display='none'; document.getElementById('ph2').style.display='flex'"/>
+
+          <!-- Placeholder — muncul kalau gambar tak jumpa -->
+          <div id="ph2" class="card-photo-placeholder" style="display:none">
+            <span class="placeholder-icon">👤</span>
+            <span class="placeholder-text">Fatin</span>
+            <span class="placeholder-hint">images/fatin.jpg</span>
+          </div>
+
+          <div class="card-photo-overlay"></div>
+          <span class="card-role-badge badge-secondary">About Us</span>
+        </div>
+
+        <div class="card-body">
+          <p class="card-number">// MEMBER 02</p>
+          <h2 class="card-name">FATIN</h2>
+          <p class="card-id">Student ID: 2402085</p>
+
+          <div class="card-project">
+            <p class="cp-label">Project</p>
+            <p class="cp-title">About Us — Group Profile Page</p>
+            <p class="cp-tech">Team Introduction · Project Overview · Gallery</p>
+          </div>
+
+          <div class="card-tags">
+            <span class="tag tag-html">HTML5</span>
+            <span class="tag tag-css">CSS3</span>
+            <span class="tag tag-js">JavaScript</span>
+            <span class="tag tag-jq">jQuery</span>
+          </div>
+
+          <div class="card-cta">
+            <span>View Their Project</span>
+            <span class="cta-arrow">→</span>
+          </div>
+        </div>
+      </a>
+
+    </div>
+
+    <footer class="footer-info">
+      <p class="footer-logo">IKM LUMUT</p>
+      <p class="footer-sub">
+        <strong>Diploma in Computer Technology (BigData) · DFD 40143</strong><br/>
+        Mobile Application Development · LO4 S1 Field Study<br/>
+        January – July 2026 Session<br/>
+        Lecturer: <strong>Mohd Shukri bin Muhamad Husin</strong>
+      </p>
     </footer>
+  </div>
 
+  <div id="toast"></div>
+
+  <script>
+  $(function() {
+    // Hover ripple effect
+    $('.member-card').on('mousemove', function(e) {
+      const rect = this.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width  * 100).toFixed(1);
+      const y = ((e.clientY - rect.top)  / rect.height * 100).toFixed(1);
+      $(this).css('background', `radial-gradient(circle at ${x}% ${y}%, #1C192C 0%, #15131F 60%)`);
+    }).on('mouseleave', function() {
+      $(this).css('background', 'var(--card)');
+    });
+  });
+  </script>
 </body>
 </html>
