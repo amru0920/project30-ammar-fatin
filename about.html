@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Project 30%</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+
+    <style>
+
+        /* ================= RESET ================= */
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        :root{
+            --primary:#00fff0;
+            --secondary:#ff00ff;
+            --dark:#050510;
+        }
+
+        body{
+            font-family:'Space Grotesk', sans-serif;
+            background:var(--dark);
+            color:white;
+            overflow-x:hidden;
+        }
+
+        /* ================= BACKGROUND ================= */
+
+        body::before{
+            content:'';
+            position:fixed;
+            inset:0;
+            background:
+            radial-gradient(circle at top left, rgba(0,255,240,0.15), transparent 30%),
+            radial-gradient(circle at bottom right, rgba(255,0,255,0.15), transparent 30%);
+            z-index:-1;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        nav{
+            width:100%;
+            padding:20px 50px;
+            position:fixed;
+            top:0;
+            left:0;
+            z-index:100;
+            backdrop-filter:blur(15px);
+            background:rgba(255,255,255,0.05);
+            border-bottom:1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-container{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+
+        .logo{
+            font-size:1.5rem;
+            font-weight:700;
+            display:flex;
+            align-items:center;
+            gap:10px;
+        }
+
+        .logo i{
+            color:var(--primary);
+        }
+
+        .nav-links{
+            display:flex;
+            gap:30px;
+        }
+
+        .nav-links a{
+            color:#ccc;
+            text-decoration:none;
+            transition:0.3s;
+        }
+
+        .nav-links a:hover{
+            color:var(--primary);
+        }
+
+        /* ================= HERO ================= */
+
+        .hero{
+            min-height:100vh;
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            align-items:center;
+            text-align:center;
+            padding:120px 20px 50px;
+        }
+
+        .hero h1{
+            font-size:5rem;
+            font-weight:800;
+            background:linear-gradient(135deg,#fff,var(--primary),var(--secondary));
+            -webkit-background-clip:text;
+            -webkit-text-fill-color:transparent;
+            margin-bottom:20px;
+        }
+
+        .hero p{
+            font-size:1.1rem;
+            color:#bbb;
+            line-height:1.6;
+        }
+
+        /* ================= TEAM SECTION ================= */
+
+        .team-section{
+            padding:80px 20px;
+            max-width:1200px;
+            margin:auto;
+        }
+
+        .section-title{
+            text-align:center;
+            font-size:2.5rem;
+            margin-bottom:60px;
+        }
+
+        .gradient-text{
+            background:linear-gradient(135deg,var(--primary),var(--secondary));
+            -webkit-background-clip:text;
+            -webkit-text-fill-color:transparent;
+        }
+
+        /* ================= CARDS ================= */
+
+        .team-grid{
+            display:flex;
+            justify-content:center;
+            gap:40px;
+            flex-wrap:wrap;
+        }
+
+        .team-card{
+            width:320px;
+            padding:35px;
+            border-radius:25px;
+            text-align:center;
+
+            background:rgba(255,255,255,0.05);
+            backdrop-filter:blur(15px);
+
+            border:1px solid rgba(255,255,255,0.1);
+
+            transition:0.4s;
+        }
+
+        .team-card:hover{
+            transform:translateY(-10px);
+            border-color:var(--primary);
+            box-shadow:0 0 30px rgba(0,255,240,0.2);
+        }
+
+        .profile-img{
+            width:180px;
+            height:180px;
+            border-radius:50%;
+            object-fit:cover;
+            margin-bottom:20px;
+            border:4px solid rgba(255,255,255,0.15);
+            transition:0.4s;
+        }
+
+        .team-card:hover .profile-img{
+            transform:scale(1.08);
+            border-color:var(--primary);
+            box-shadow:0 0 25px rgba(0,255,240,0.5);
+        }
+
+        .team-card h3{
+            font-size:1.5rem;
+            margin-top:10px;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer{
+            padding:30px;
+            text-align:center;
+            color:#888;
+            border-top:1px solid rgba(255,255,255,0.08);
+            margin-top:50px;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media(max-width:768px){
+
+            nav{
+                padding:20px;
+            }
+
+            .hero h1{
+                font-size:3rem;
+            }
+
+            .section-title{
+                font-size:2rem;
+            }
+
+            .team-card{
+                width:100%;
+                max-width:350px;
+            }
+
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+
+    <nav>
+        <div class="nav-container">
+
+            <div class="logo">
+                <i class="fas fa-brain"></i>
+                <span>Project 30%</span>
+            </div>
+
+            <div class="nav-links">
+                <a href="#">Home</a>
+            </div>
+
+        </div>
+    </nav>
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+        <h1>Project 30%</h1>
+
+        <p>
+            Revolutionizing how students submit <br>
+            and manage assignments online.
+        </p>
+
+    </section>
+
+    <!-- TEAM -->
+
+    <section class="team-section">
+
+        <h2 class="section-title">
+            Meet Our <span class="gradient-text">Team</span>
+        </h2>
+
+        <div class="team-grid">
+
+            <!-- CARD 1 -->
+
+            <div class="team-card">
+
+                <img src="photo_2026-05-17_21-55-35.jpg" class="profile-img">
+
+                <h3>Muhd Ammar</h3>
+
+            </div>
+
+            <!-- CARD 2 -->
+
+            <div class="team-card">
+
+                <img src="fatin.jpeg" class="profile-img">
+
+                <h3>Fatin Nadiah</h3>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- FOOTER -->
+
+    <footer>
+        © 2026 Project 30% • Built with ❤️ for Students
+    </footer>
+
+</body>
+</html>
